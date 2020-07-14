@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "MyObject.h"
 
 int main(int argc, const char * argv[]) {
    
@@ -22,6 +23,7 @@ int main(int argc, const char * argv[]) {
 ////        id ob = [[NSObject alloc] init];
 //    {
 //        id objj = obj;
+//    [objj retain];    //加上这句话retainCount为2
 //        NSLog(@"[obj retainCount] == %lu", (unsigned long)[obj retainCount]);
 //        [objj release];
 //    }
@@ -32,8 +34,19 @@ int main(int argc, const char * argv[]) {
 //        NSLog(@"[obj retainCount] == %lu", (unsigned long)[obj retainCount]);
 //        [obj dealloc];
 //        [NSAutoreleasePool showPools];
+//    id obj = [NSMutableArray array];
+//    [obj retain];
+//    NSLog(@"%lu", [obj retainCount]);
+//    [obj release];
+    id obj = [[NSObject alloc] init];
+    NSLog(@"%lu", [obj retainCount]);
+    id obj1 = obj;
+    [obj1 retain];
+    NSLog(@"%lu", [obj retainCount]);
+    [obj1 release];
+    NSLog(@"%lu", [obj retainCount]);
     
-    // __weak修饰符
+        // __weak修饰符
 //    id __weak obj = [[NSObject alloc] init];
 //    NSLog(@"[obj retainCount] == %lu", (unsigned long)[obj retainCount]);
 //    }
@@ -94,7 +107,7 @@ int main(int argc, const char * argv[]) {
 ////    NSLog(@"%ld", [cfObj retainCount]);
 //    CFRelease(cfObj);
 //    NSLog(@"%lu", [obj retainCount]);
-//    60页 obj持有对象的时候cfObj不是要释放吗 怎么还可以访问
+//    60页 obj通过CFGetRetainCount持有对象的时候cfObj不是要释放吗 怎么还可以访问
 //    {
 //        CFMutableArrayRef cfObj = CFArrayCreateMutable(kCFAllocatorDefault, 0, NULL);
 //        NSLog(@"%ld", CFGetRetainCount(cfObj));
@@ -108,5 +121,34 @@ int main(int argc, const char * argv[]) {
 ////        id __weak obj = nil;
 //        NSLog(@"%@", obj);
 //    }
+    //MRC下非自己生成的对象不持有
+//    id obj = [NSMutableArray array];
+//    id obj1 = [[NSMutableArray alloc] init];
+//    NSLog(@"%lu %lu %lu", [[NSMutableArray array] retainCount], [obj1 retainCount], [obj retainCount]);
+//    id  o = obj;
+//    NSLog(@"%lu %lu %lu", [[NSMutableArray array] retainCount], [obj1 retainCount], [obj retainCount]);
+//    id __weak obj = [[NSMutableArray alloc] init];
+//    NSLog(@"%@", obj);
+    //P74
+//    id __strong obj = [[MyObject alloc] init];
+//    id __weak o = obj;
+//    NSLog(@"%@", o);
+//    NSLog(@"%@", o);
+//    NSLog(@"%@", o);
+//    NSLog(@"%@", o);
+//    NSLog(@"%@", o);
+//    @autoreleasepool {
+//        id __strong obj = [[NSObject alloc] init];
+//        _objc_autoreleasePoolPrint();
+//        id __weak o = obj;
+//        NSLog(@"before %d", _objc_rootRetainCount(obj));
+//        //因为weak使用时会将引用的对象注册到自动释放池中
+//        NSLog(@"class == %@", [o class]);
+//        NSLog(@"after %d", _objc_rootRetainCount(obj));
+//        _objc_autoreleasePoolPrint();
+//        NSLog(@"finally %d", _objc_rootRetainCount(obj));
+//    }
+    
+    
     return 0;
 }
